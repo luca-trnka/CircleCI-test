@@ -1,34 +1,32 @@
-version: 2.1
+version: 2
+
 jobs:
   build:
     docker:
       - image: circleci/openjdk:17-jdk-alpine
+
+    working_directory: ~/repo/
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
     steps:
-      - checkout
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t shityimage .
-  deploy:
-    docker:
-      - image: circleci/openjdk:17-jdk-alpine
-    steps:
-      - checkout
-      - run:
-          name: Deploy to AWS EC2
-          command: |
-            # Replace with your AWS CLI commands to deploy the Docker image to EC2
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: development
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+      - checkout:
+          path: ~/repo
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: gradle test
