@@ -1,3 +1,23 @@
+# Ignore Terraform .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Ignore Terraform .tfvars files, which may contain sensitive data
+*.tfvars
+
+# Ignore Terraform plan files
+*.tfplan
+
+# Ignore all log files
+*.log
+
+# Ignore all .env files
+*.env
+
+# Ignore keys
+keyname.pub
+
+
 HELP.md
 .gradle
 build/
