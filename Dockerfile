@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-alpine
+FROM openjdk:8
 
 WORKDIR /app
 COPY build/libs/dummy-project-0.0.1-SNAPSHOT.jar app.jar
